@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>DocStrap Source: F:/Git/stopforumspam/index.js</title>
+
+	<!--[if lt IE 9]>
+	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<link type="text/css" rel="stylesheet" href="styles/sunlight.default.css">
+
+	<link type="text/css" rel="stylesheet" href="styles/site.cosmo.css">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top navbar-inverse">
+<div class="container">
+	<div class="navbar-header">
+		<a class="navbar-brand" href="index.html">DocStrap</a>
+	</div>
+	<div class="navbar-collapse">
+		<ul class="nav navbar-nav">
+			
+		</ul>
+	</div>
+</div>
+</div>
+
+
+<div class="container">
+<div class="row">
+
+	
+	<div class="col-md-12">
+	
+		<div id="main">
+    		<h1 class="page-title">Source: F:/Git/stopforumspam/index.js</h1>
+			
+
+		<h1 class="page-title">Source: F:/Git/stopforumspam/index.js</h1>
+    
+<section>
+	<article>
+		<pre
+			class="sunlight-highlight-javascript linenums">'use strict';
+
+var request = require('request'),
+		sprintf = require('sprintf-js').sprintf,
+		_ = require('lodash'),
+		Q = require('q'),
+		utf8 = require('utf8');
+
+var sfs = {
+	config: {
+		url: 'http://stopforumspam.com',
+		routes: [{
+			name: 'search',
+			path: '/api?f=json'
+		},{
+			name: 'submit',
+			path: '/add.php?api_key=%s'
+		}],
+		searchParameters: [{
+			name: 'ip',
+			use: true,
+			searchAdd: '&amp;ip=%s',
+			submitAdd: '&amp;ip_addr=%s'
+		},{
+			name: 'email',
+			use: true,
+			searchAdd: '&amp;email=%s',
+			submitAdd: '&amp;email=%s'
+		},{
+			name: 'username',
+			use: false,
+			searchAdd: '&amp;username=%s',
+			submitAdd: '&amp;username=%s'
+		}],
+		apiKey: ''
+	}
+};
+
+/**
+* Checks if a user is a spammer
+* @param userObject should contain properties for each searchParameter where use is set to true
+* 	@example: { ip: '123.456.789.100', email: 'test@test.com', username: 'Spammer!' }
+* @returns Promise which returns true if the user is found on StopForumSpam.com
+*/
+sfs.isSpammer = function (userObject) {
+	var deferred = Q.defer();
+
+	var url = sfs.config.url + _.findWhere(sfs.config.routes, { name: 'search' }).path;
+	_.each(sfs.config.searchParameters, function (parameter) {
+		if (parameter.use) {
+			if (!userObject[parameter.name]) {
+				// send an error to the console, but this isn't really crashworthy
+				console.error(sprintf('Parameter: %s required but not defined', parameter.name));
+			}
+			else {
+				url += sprintf(parameter.searchAdd, encodeURIComponent(utf8.encode(userObject[parameter.name])));
+			}
+		}
+	});
+
+	request(url, function (error, response, body) {
+		if (error) { return deferred.reject(error); }
+		if (response.statusCode !== 200) { return deferred.reject(new Error('Response Status: ' + response.statusCode + ', ' + body)); }
+		var result = false;
+		var jsBody = JSON.parse(body);
+
+		_.each(sfs.config.searchParameters, function (parameter) {
+			if (parameter.use &amp;&amp; userObject[parameter.name] &amp;&amp; jsBody[parameter.name].appears > 0) {
+				result = JSON.parse(body);
+			}
+		});
+		deferred.resolve(result);
+	});
+
+	return deferred.promise;
+};
+
+/**
+* Submits the user to StopForumSpam.com under your API key
+* Requires config.apiKey is set
+* @param userObject must contain properties for each searchParameter
+* 	empty parameters will throw an error
+* 	@example: { ip: '123.456.789.100', email: 'test@test.com', username: 'Spammer!' }
+* @param evidence {string} (optional) you can tell StopForumSpam.com your reasoning if you like
+* @returns Promise
+*/
+sfs.submit = function (userObject, evidence) {
+	var deferred = Q.defer();
+	if (!sfs.config.apiKey) {
+		deferred.reject(new Error('You cannot submit spammers without an API Key.'));
+	}
+	else {
+		var url = sfs.config.url + sprintf(_.findWhere(sfs.config.routes, { name: 'submit' }).path, sfs.config.apiKey);
+		var error = false;
+		_.each(sfs.config.searchParameters, function (parameter) {
+			if (!userObject[parameter.name]) {
+				error = true;
+			}
+			else {
+				url += sprintf(parameter.searchAdd, encodeURIComponent(utf8.encode(userObject[parameter.name])));
+			}
+		});
+		if (error) {
+			deferred.reject(new Error('You must have all search parameters for StopForumSpam.com to accept your submission.'));
+		}
+		else {
+			if (evidence) {
+				// unescape in JS is a simple way to convert to UTF-8, which StopForumSpam requires
+				url += sprintf('&amp;evidence=%s', encodeURIComponent(utf8.encode(evidence)));
+			}
+
+			request(url, function (error, response, body) {
+				if (error) { return deferred.reject(error); }
+				if (response.statusCode !== 200) { return deferred.reject(new Error('Response Status: ' + response.statusCode + ', ' + body)); }
+				
+				deferred.resolve();
+			});
+		}
+	}
+
+	return deferred.promise;
+};
+
+/**
+* Checks if the user is a spammer, and submits them back to StopForumSpam.com automatically if they are
+* Requires config.apiKey is set
+* @param userObject should contain properties for each searchParameter
+* 	@example: { ip: '123.456.789.100', email: 'test@test.com', username: 'Spammer!' }
+* @param evidence {string} (optional) you can tell StopForumSpam.com your reasoning if you like
+* 	example: 'Found on StopForumSpam.com and resubmitted'
+* @returns Promise
+*/
+sfs.checkAndSubmit = function (userObject, evidence) {
+	var deferred = Q.defer();
+
+	sfs.isSpammer(userObject)
+		.then(function (findings) {
+			if (findings) {
+				sfs.submit(userObject, evidence)
+					.then(deferred.resolve)
+					.catch(deferred.reject);
+			}
+		}, function (error) {
+			deferred.reject(error);
+		});
+
+	return deferred.promise;
+};
+
+module.exports = sfs;
+</pre>
+	</article>
+</section>
+
+
+
+
+
+		</div>
+	</div>
+
+	<div class="clearfix"></div>
+
+	
+
+</div>
+</div>
+
+
+<footer>
+
+
+	<span class="copyright">
+	DocStrap Copyright © 2012-2014 The contributors to the JSDoc3 and DocStrap projects.
+	</span>
+	<br />
+
+<span class="jsdoc-message">
+	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.2</a>
+	on Tue Jun 16th 2015 using the <a
+	href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+</span>
+</footer>
+
+<!--<script src="scripts/sunlight.js"></script>-->
+<script src="scripts/docstrap.lib.js"></script>
+<script src="scripts/bootstrap-dropdown.js"></script>
+<script src="scripts/toc.js"></script>
+
+<script>
+$( function () {
+	$( "[id*='$']" ).each( function () {
+		var $this = $( this );
+
+		$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
+	} );
+
+	$( "#toc" ).toc( {
+		anchorName  : function ( i, heading, prefix ) {
+			return $( heading ).attr( "id" ) || ( prefix + i );
+		},
+		selectors   : "h1,h2,h3,h4",
+		showAndHide : false,
+		scrollTo    : "100px"
+	} );
+
+	$( "#toc>ul" ).addClass( "nav nav-pills nav-stacked" );
+	$( "#main span[id^='toc']" ).addClass( "toc-shim" );
+	$( '.dropdown-toggle' ).dropdown();
+	//			$( ".tutorial-section pre, .readme-section pre" ).addClass( "sunlight-highlight-javascript" ).addClass( "linenums" );
+
+	$( ".tutorial-section pre, .readme-section pre" ).each( function () {
+		var $this = $( this );
+
+		var example = $this.find( "code" );
+		exampleText = example.html();
+		var lang = /{@lang (.*?)}/.exec( exampleText );
+		if ( lang && lang[1] ) {
+			exampleText = exampleText.replace( lang[0], "" );
+			example.html( exampleText );
+			lang = lang[1];
+		} else {
+			lang = "javascript";
+		}
+
+		if ( lang ) {
+
+			$this
+			.addClass( "sunlight-highlight-" + lang )
+			.addClass( "linenums" )
+			.html( example.html() );
+
+		}
+	} );
+
+	Sunlight.highlightAll( {
+		lineNumbers : true,
+		showMenu : true,
+		enableDoclinks : true
+	} );
+} );
+</script>
+
+
+
+<!--Navigation and Symbol Display-->
+
+
+<!--Google Analytics-->
+
+
+</body>
+</html>
