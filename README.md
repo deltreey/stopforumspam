@@ -23,7 +23,7 @@ The simplest way to use this is to create a user like this
 var sfsUser = stopforumspam.User('127.0.0.1', 'test@test.com', 'testUserName');
 ```
 
-Then you can check it eassily
+Then you can check the stopforumspam.com database easily.
 ```js
 sfsUser.isSpammer().then(function (result) {
 	 .then(function (result) {
@@ -41,9 +41,9 @@ sfsUser.isSpammer().then(function (result) {
 });
 ```
 
-And submit them if they're spammers
+You can easily submit them if they're spammers too.
 ```js
-sfs.Key('my-api-key');
+stopforumspam.Key('my-api-key');
 sfsUser.submit('This text is an optional way to tell SFS why you submitted the user.');
 // you can use .then() if you want to wait until after the submit, though I can't imagine why
 ```
