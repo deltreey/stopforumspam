@@ -69,7 +69,7 @@ sfs.isSpammer = function (userObject) {
 
 	var url = sfs.config.url + _.findWhere(sfs.config.routes, { name: 'search' }).path;
 	_.each(sfs.config.searchParameters, function (parameter) {
-		if (parameter.use) {
+		if (parameter.searchWith) {
 			if (!userObject[parameter.name]) {
 				// send an error to the console, but this isn't really crashworthy
 				console.error(sprintf('Parameter: %s required but not defined', parameter.name));
@@ -87,7 +87,7 @@ sfs.isSpammer = function (userObject) {
 		var jsBody = JSON.parse(body);
 
 		_.each(sfs.config.searchParameters, function (parameter) {
-			if (parameter.use && userObject[parameter.name] && jsBody[parameter.name].appears > 0) {
+			if (parameter.searchWith && userObject[parameter.name] && jsBody[parameter.name].appears > 0) {
 				result = JSON.parse(body);
 			}
 		});
@@ -190,11 +190,14 @@ sfs.checkAndSubmit = function (userObject, evidence) {
 		.then(function (findings) {
 			if (findings) {
 				var submit = true;
-				_.each(sfs.config.searchParameters, function (parameter) {
-					if (parameter.submitWhen && findings[parameter.name] === 0) {
-						submit = false;
-					}
-				});
+				// if all search parameters are set to submitWhen: false, ignore them
+				if (_.findWhere(sfs.config.searchParameters, { submitWhen: true })) {
+					_.each(sfs.config.searchParameters, function (parameter) {
+						if (parameter.submitWhen && findings[parameter.name] === 0) {
+							submit = false;
+						}
+					});
+				}
 				if (submit) {
 					sfs.submit(userObject, evidence)
 						.then(deferred.resolve(findings))
@@ -294,7 +297,7 @@ sfs.User.prototype.checkAndSubmitSync = function* (evidence) {
 * @returns {string} The current API Key as it is set 
 */
 sfs.Key = function(key) {
-	if (key !== null) {
+	if (key !== undefined) {
 		sfs.config.apiKey = key;
 	}
 
@@ -309,7 +312,7 @@ sfs.Key = function(key) {
 */
 sfs.SearchWith = function (useParameters) {
 	_.each(sfs.config.searchParameters, function(parameter) {
-		if (useParameters.indexOf(parameter.name)) {
+		if (useParameters.indexOf(parameter.name) > -1) {
 			parameter.searchWith = true;
 		}
 		else {
@@ -327,7 +330,7 @@ sfs.SearchWith = function (useParameters) {
 */
 sfs.SubmitWhenMatched = function (useParameters) {
 	_.each(sfs.config.searchParameters, function(parameter) {
-		if (useParameters.indexOf(parameter.name)) {
+		if (useParameters.indexOf(parameter.name) > -1) {
 			parameter.submitWhen = true;
 		}
 		else {

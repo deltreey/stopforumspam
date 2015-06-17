@@ -72,7 +72,7 @@
     <section class="readme-section">
         <article><h1>StopForumSpam</h1><p><a href="https://npmjs.org/package/stopforumspam"><img src="https://badge.fury.io/js/stopforumspam.svg" alt="NPM version"></a> <a href="https://travis-ci.org/deltreey/stopforumspam"><img src="https://travis-ci.org/deltreey/stopforumspam.svg?branch=master" alt="Build Status"></a> <a href="https://david-dm.org/deltreey/stopforumspam"><img src="https://david-dm.org/deltreey/stopforumspam.svg?theme=shields.io" alt="Dependency Status"></a></p>
 <blockquote>
-<p>A nodejs wrapper for the StopForumSpam.com REST API</p>
+<p>A nodejs wrapper for the <a href="http://stopforumspam.com">StopForumSpam.com</a> REST API</p>
 </blockquote>
 <h2>Install</h2><pre class="prettyprint source lang-sh"><code>$ npm install --save stopforumspam</code></pre><h2>Usage</h2><pre class="prettyprint source lang-js"><code>var stopforumspam = require('stopforumspam');</code></pre><p>The simplest way to use this is to create a user like this</p>
 <pre class="prettyprint source lang-js"><code>var sfsUser = stopforumspam.User('127.0.0.1', 'test@test.com', 'testUserName');</code></pre><p>Then you can check it eassily</p>
@@ -112,7 +112,15 @@ if (spammer) {
 var sfsUser = stopforumspam.User('127.0.0.1', 'test@test.com', 'testUserName');
 if (sfsUser.isSpammerSync()) {
     // do stuff
-}</code></pre><h2>License</h2><p>MIT © <a href="https://github.com/deltreey">Ted</a></p></article>
+}</code></pre><h2>Configuration</h2><p>By default, email and IP address is the only thing checked against StopForumSpam.com.  You can change this using the <code>SearchWith</code> function.</p>
+<pre class="prettyprint source lang-js"><code>stopforumspam.SearchWith(['ip', 'username']);
+// searches will not check email, but will check username & ip
+stopforumspam.SearchWith(['email']);
+// searches will only check emails</code></pre><p>By default, checkAndSubmit only submits spammers who match both IP &amp; email on StopForumSpam.com.  This can be changed using the <code>SubmitWhenMatched</code> function.</p>
+<pre class="prettyprint source lang-js"><code>stopforumspam.SubmitWhenMatched(['ip', 'username']);
+// searches will ignore email results, but will submit if both username & ip match
+stopforumspam.SubmitWhenMatched([]);
+// submissions will happen if any value that is searched for matches</code></pre><h2>License</h2><p>MIT © <a href="https://github.com/deltreey">Ted</a></p></article>
     </section>
 
 

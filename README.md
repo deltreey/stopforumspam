@@ -2,7 +2,7 @@
 
 [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][daviddm-image]][daviddm-url]
 
-> A nodejs wrapper for the StopForumSpam.com REST API
+> A nodejs wrapper for the [StopForumSpam.com][sfs] REST API
 
 
 ## Install
@@ -80,6 +80,24 @@ if (sfsUser.isSpammerSync()) {
 }
 ```
 
+## Configuration
+
+By default, email and IP address is the only thing checked against StopForumSpam.com.  You can change this using the `SearchWith` function.
+```js
+stopforumspam.SearchWith(['ip', 'username']);
+// searches will not check email, but will check username & ip
+stopforumspam.SearchWith(['email']);
+// searches will only check emails
+```
+
+By default, checkAndSubmit only submits spammers who match both IP & email on StopForumSpam.com.  This can be changed using the `SubmitWhenMatched` function.
+```js
+stopforumspam.SubmitWhenMatched(['ip', 'username']);
+// searches will ignore email results, but will submit if both username & ip match
+stopforumspam.SubmitWhenMatched([]);
+// submissions will happen if any value that is searched for matches
+```
+
 ## License
 
 MIT © [Ted](https://github.com/deltreey)
@@ -91,3 +109,4 @@ MIT © [Ted](https://github.com/deltreey)
 [travis-url]: https://travis-ci.org/deltreey/stopforumspam
 [daviddm-image]: https://david-dm.org/deltreey/stopforumspam.svg?theme=shields.io
 [daviddm-url]: https://david-dm.org/deltreey/stopforumspam
+[sfs]: http://stopforumspam.com
