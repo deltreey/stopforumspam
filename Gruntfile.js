@@ -34,7 +34,8 @@ module.exports = function (grunt) {
     mochacli: {
       options: {
         reporter: 'nyan',
-        bail: true
+        bail: true,
+        'harmony-generators': true
       },
       all: ['test/*.js']
     },
@@ -51,8 +52,22 @@ module.exports = function (grunt) {
         files: '<%= jshint.test.src %>',
         tasks: ['jshint:test', 'mochacli']
       }
+    },
+    versioner: {
+      options: {
+        gitPush: false,
+        gitPushTag: false,
+        tagPrefix: ''
+      },
+      default: {
+        files: {
+          './package.json': ['./package.json']
+        }
+      }
     }
   });
 
   grunt.registerTask('default', ['jshint', 'mochacli']);
+  grunt.registerTask('document', ['jsdoc']);
+  grunt.registerTask('update', ['document', 'versioner:default']);
 };

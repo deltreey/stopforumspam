@@ -24,6 +24,13 @@
 	<div class="navbar-collapse">
 		<ul class="nav navbar-nav">
 			
+			<li class="dropdown">
+				<a href="namespaces.list.html" class="dropdown-toggle" data-toggle="dropdown">Namespaces<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="sfs.html">sfs</a></li><li><a href="sfs.User.html">sfs.User</a></li>
+				</ul>
+			</li>
+			
 		</ul>
 	</div>
 </div>
@@ -67,23 +74,45 @@
 <blockquote>
 <p>A nodejs wrapper for the StopForumSpam.com REST API</p>
 </blockquote>
-<h2>Install</h2><pre class="prettyprint source lang-sh"><code>$ npm install --save stopforumspam</code></pre><h2>Usage</h2><pre class="prettyprint source lang-js"><code>var stopforumspam = require('stopforumspam');
+<h2>Install</h2><pre class="prettyprint source lang-sh"><code>$ npm install --save stopforumspam</code></pre><h2>Usage</h2><pre class="prettyprint source lang-js"><code>var stopforumspam = require('stopforumspam');</code></pre><p>The simplest way to use this is to create a user like this</p>
+<pre class="prettyprint source lang-js"><code>var sfsUser = stopforumspam.User('127.0.0.1', 'test@test.com', 'testUserName');</code></pre><p>Then you can check it eassily</p>
+<pre class="prettyprint source lang-js"><code>sfsUser.isSpammer().then(function (result) {
+     .then(function (result) {
+            // result is false if not found
 
-stopforumspam.isSpammer({ username: 'test', email: 'test@test.com', ip: '127.0.0.1' })
-// @returns a Promise with the results
-// false if not a spammer, an object showing matched information if found
-    .then(function (found) {
-        if (found) {
-            console.log(found);    // details about the found user
-        }
+            // if true result looks something like this
+            // result = {
+            //   success: 1,
+            //   username: {
+            //     lastseen: '2015-03-09 15:22:49',
+            //     frequency: 3830,
+            //     appears: 1,
+            //     confidence: 90.2 } }
+);
+});</code></pre><p>And submit them if they're spammers</p>
+<pre class="prettyprint source lang-js"><code>sfs.Key('my-api-key');
+sfsUser.submit('This text is an optional way to tell SFS why you submitted the user.');
+// you can use .then() if you want to wait until after the submit, though I can't imagine why</code></pre><p>Or better yet, automatically submit the spammer if they're found</p>
+<pre class="prettyprint source lang-js"><code>sfs.Key('my-api-key');
+sfsUser.checkAndSubmit('Found on StopForumSpam.com and resubmitted.')
+    .then(function (result) {
+        // result is just like isSpammer above, so you can use the information for your needs,
+        // or bypass the then function altogether
     });
-
-stopforumspam.submit({ username: 'test', email: 'test@test.com', ip: '127.0.0.1' }, 'Caught You!');
-// the second parameter is optional
-
-stopforumspam.checkAndSubmit({ username: 'test', email: 'test@test.com', ip: '127.0.0.1' }, 'Already on SFS');
-// the second parameter is optional
-// this auto-submits anyone found on StopForumSpam.com, calling both of the above functions</code></pre><h2>License</h2><p>MIT © <a href="https://github.com/deltreey">Ted</a></p></article>
+});</code></pre><p>If you would prefer to call things manually, that's fine too.  For example:</p>
+<pre class="prettyprint source lang-js"><code>stopforumspam.isSpammer({ ip: '123.456.789.100', email: 'test@test.com', username: 'Spammer!' })
+    .then(function (result) {
+        // result is just like above
+    });</code></pre><p>And if you're using ES6 and want synchronous code, then there's a Sync function for everything</p>
+<pre class="prettyprint source lang-js"><code>var spammer = stopforumspam.isSpammerSync({ ip: '123.456.789.100', email: 'test@test.com', username: 'Spammer!' });
+if (spammer) {
+    // do stuff
+}
+// User functions too!
+var sfsUser = stopforumspam.User('127.0.0.1', 'test@test.com', 'testUserName');
+if (sfsUser.isSpammerSync()) {
+    // do stuff
+}</code></pre><h2>License</h2><p>MIT © <a href="https://github.com/deltreey">Ted</a></p></article>
     </section>
 
 

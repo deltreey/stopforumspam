@@ -16,24 +16,69 @@ $ npm install --save stopforumspam
 
 ```js
 var stopforumspam = require('stopforumspam');
-
-stopforumspam.isSpammer({ username: 'test', email: 'test@test.com', ip: '127.0.0.1' })
-// @returns a Promise with the results
-// false if not a spammer, an object showing matched information if found
-	.then(function (found) {
-		if (found) {
-			console.log(found);	// details about the found user
-		}
-	});
-
-stopforumspam.submit({ username: 'test', email: 'test@test.com', ip: '127.0.0.1' }, 'Caught You!');
-// the second parameter is optional
-
-stopforumspam.checkAndSubmit({ username: 'test', email: 'test@test.com', ip: '127.0.0.1' }, 'Already on SFS');
-// the second parameter is optional
-// this auto-submits anyone found on StopForumSpam.com, calling both of the above functions
 ```
 
+The simplest way to use this is to create a user like this
+```js
+var sfsUser = stopforumspam.User('127.0.0.1', 'test@test.com', 'testUserName');
+```
+
+Then you can check it eassily
+```js
+sfsUser.isSpammer().then(function (result) {
+	 .then(function (result) {
+			// result is false if not found
+			
+			// if true result looks something like this
+			// result = {
+			//   success: 1,
+			//   username: {
+			//     lastseen: '2015-03-09 15:22:49',
+			//     frequency: 3830,
+			//     appears: 1,
+			//     confidence: 90.2 } }
+);
+});
+```
+
+And submit them if they're spammers
+```js
+sfs.Key('my-api-key');
+sfsUser.submit('This text is an optional way to tell SFS why you submitted the user.');
+// you can use .then() if you want to wait until after the submit, though I can't imagine why
+```
+
+Or better yet, automatically submit the spammer if they're found
+```js
+sfs.Key('my-api-key');
+sfsUser.checkAndSubmit('Found on StopForumSpam.com and resubmitted.')
+	.then(function (result) {
+		// result is just like isSpammer above, so you can use the information for your needs,
+		// or bypass the then function altogether
+	});
+});
+```
+
+If you would prefer to call things manually, that's fine too.  For example:
+```js
+stopforumspam.isSpammer({ ip: '123.456.789.100', email: 'test@test.com', username: 'Spammer!' })
+	.then(function (result) {
+		// result is just like above
+	});
+```
+
+And if you're using ES6 and want synchronous code, then there's a Sync function for everything
+```js
+var spammer = stopforumspam.isSpammerSync({ ip: '123.456.789.100', email: 'test@test.com', username: 'Spammer!' });
+if (spammer) {
+	// do stuff
+}
+// User functions too!
+var sfsUser = stopforumspam.User('127.0.0.1', 'test@test.com', 'testUserName');
+if (sfsUser.isSpammerSync()) {
+	// do stuff
+}
+```
 
 ## License
 
