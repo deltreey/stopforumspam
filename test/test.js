@@ -233,36 +233,4 @@ describe('stopforumspam node module', function () {
 			assert.equal(false, stopforumspam.config.apiKey);
 		});
 	});
-
-	describe('#SearchWith', function () {
-		it('should set the configuration values to true for the searchParameters with matching names', function () {
-			// Given: a specific set of values in the config
-			_.findWhere(stopforumspam.config.searchParameters, { name: 'username' }).searchWith = true;
-			_.findWhere(stopforumspam.config.searchParameters, { name: 'ip' }).searchWith = false;
-			_.findWhere(stopforumspam.config.searchParameters, { name: 'email' }).searchWith = false;
-
-			// When: we call SubmitWhenMatched with those parameters
-			stopforumspam.SearchWith(['ip', 'username', 'email']);
-
-			// Then: they should all be true
-			assert.equal(true, _.findWhere(stopforumspam.config.searchParameters, { name: 'username' }).searchWith);
-			assert.equal(true, _.findWhere(stopforumspam.config.searchParameters, { name: 'ip' }).searchWith);
-			assert.equal(true, _.findWhere(stopforumspam.config.searchParameters, { name: 'email' }).searchWith);
-		});
-
-		it('should set the configuration values to false for the searchParameters without matching names', function () {
-			// Given: a specific set of values in the config
-			_.findWhere(stopforumspam.config.searchParameters, { name: 'username' }).searchWith = true;
-			_.findWhere(stopforumspam.config.searchParameters, { name: 'ip' }).searchWith = false;
-			_.findWhere(stopforumspam.config.searchParameters, { name: 'email' }).searchWith = false;
-
-			// When: we call SubmitWhenMatched with those parameters
-			stopforumspam.SearchWith([]);
-
-			// Then: they should all be true
-			assert.equal(false, _.findWhere(stopforumspam.config.searchParameters, { name: 'username' }).searchWith);
-			assert.equal(false, _.findWhere(stopforumspam.config.searchParameters, { name: 'ip' }).searchWith);
-			assert.equal(false, _.findWhere(stopforumspam.config.searchParameters, { name: 'email' }).searchWith);
-		});
-	});
 });
