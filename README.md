@@ -1,5 +1,7 @@
 # StopForumSpam
 
+[![Join the chat at https://gitter.im/deltreey/stopforumspam](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/deltreey/stopforumspam?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][daviddm-image]][daviddm-url]
 
 > A nodejs wrapper for the [StopForumSpam.com][sfs] REST API
