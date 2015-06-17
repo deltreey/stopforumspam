@@ -26,20 +26,14 @@ var sfs = {
 		}],
 		searchParameters: [{
 			name: 'ip',
-			searchWith: true,
-			submitWhen: true,
 			searchAdd: '&ip=%s',
 			submitAdd: '&ip_addr=%s'
 		},{
 			name: 'email',
-			searchWith: true,
-			submitWhen: true,
 			searchAdd: '&email=%s',
 			submitAdd: '&email=%s'
 		},{
 			name: 'username',
-			searchWith: false,
-			submitWhen: false,
 			searchAdd: '&username=%s',
 			submitAdd: '&username=%s'
 		}],
@@ -48,8 +42,9 @@ var sfs = {
 };
 
 /**
-* Checks if a user is a spammer.  This relies heavily on searchParameters searchWith values.
-* @param userObject should contain properties for each searchParameter where use is set to true
+* Checks if a user is a spammer.  Pass only the parameters you wish to search for
+* @param userObject {object} a hashlike object with each of the  parameters to search for.
+* 	Search for as many or as few as you wish.
 * @example
 * stopforumspam.isSpammer({ ip: '123.456.789.100', email: 'test@test.com', username: 'Spammer!' })
 *   .then(function (result) {
@@ -69,14 +64,8 @@ sfs.isSpammer = function (userObject) {
 
 	var url = sfs.config.url + _.findWhere(sfs.config.routes, { name: 'search' }).path;
 	_.each(sfs.config.searchParameters, function (parameter) {
-		if (parameter.searchWith) {
-			if (!userObject[parameter.name]) {
-				// send an error to the console, but this isn't really crashworthy
-				console.error(sprintf('Parameter: %s required but not defined', parameter.name));
-			}
-			else {
-				url += sprintf(parameter.searchAdd, encodeURIComponent(utf8.encode(userObject[parameter.name])));
-			}
+		if (userObject[parameter.name]) {
+			url += sprintf(parameter.searchAdd, encodeURIComponent(utf8.encode(userObject[parameter.name])));
 		}
 	});
 
@@ -163,63 +152,6 @@ sfs.submitSync = function* (userObject, evidence) {
 };
 
 /**
-* Checks if the user is a spammer, and submits them back to StopForumSpam.com automatically if they are.
-* Requires config.apiKey is set.  This relies heavily on the searchParameters submitWhen values
-* @param userObject should contain properties for each searchParameter
-* @example
-* stopforumspam.Key('some-api-key');
-* // or stopforumspam.config.apiKey = 'some-api-key';
-* stopforumspam.checkAndSubmit({ ip: '123.456.789.100', email: 'test@test.com', username: 'Spammer!' }, 'Found on StopForumSpam.com and resubmitted')
-*   .then(function (result) {
-*   // result if false if not found
-*   // result = {
-*   //   success: 1,
-*   //   username: {
-*   //     lastseen: '2015-03-09 15:22:49',
-*   //     frequency: 3830,
-*   //     appears: 1,
-*   //     confidence: 90.2 } }
-* });
-* @param evidence {string} (optional) you can tell StopForumSpam.com your reasoning if you like
-* @returns Promise
-*/
-sfs.checkAndSubmit = function (userObject, evidence) {
-	var deferred = Q.defer();
-
-	sfs.isSpammer(userObject)
-		.then(function (findings) {
-			if (findings) {
-				var submit = true;
-				// if all search parameters are set to submitWhen: false, ignore them
-				if (_.findWhere(sfs.config.searchParameters, { submitWhen: true })) {
-					_.each(sfs.config.searchParameters, function (parameter) {
-						if (parameter.submitWhen && findings[parameter.name] === 0) {
-							submit = false;
-						}
-					});
-				}
-				if (submit) {
-					sfs.submit(userObject, evidence)
-						.then(deferred.resolve(findings))
-						.catch(deferred.reject);
-				}
-			}
-		}, function (error) {
-			deferred.reject(error);
-		});
-
-	return deferred.promise;
-};
-
-/**
-* Syncronous version of checkAndSubmit
-* Uses ES6 yield trick https://github.com/luciotato/waitfor-ES6#the-funny-thing-is
-*/
-sfs.checkAndSubmitSync = function* (userObject, evidence) {
-	yield [sfs.checkAndSubmit, userObject, evidence];
-};
-
-/**
 * Creates a user object to utilize the APi in a more human manner
 * @memberOf sfs
 * @namespace User
@@ -272,25 +204,6 @@ sfs.User.prototype.submitSync = function* (evidence) {
 };
 
 /**
-* The User object implements checkAndSubmit
-* @example
-* var sfsUser = stopforumspam.User('123.456.789.100', 'test@test.com', 'Spammer!');
-* sfsUser.checkAndSubmit().then(function (result) {
-*   // ...maybe stop the user from logging in if result is not false?
-* });
-*/
-sfs.User.prototype.checkAndSubmit = function (evidence) {
-	return sfs.checkAndSubmit(this, evidence);
-};
-
-/**
-* The User object implements checkAndSubmitSync
-*/
-sfs.User.prototype.checkAndSubmitSync = function* (evidence) {
-	yield [this.checkAndSubmit, evidence];
-};
-
-/**
 * Getter & Setter for the API Key
 * @param key {string} The API Key for StopForumSpam.com  Necessary for
 * 	submitting users to the database.  Unset it with an empty string or false.
@@ -302,41 +215,6 @@ sfs.Key = function(key) {
 	}
 
 	return sfs.config.apiKey;
-};
-
-/**
-* Decide which parameters to use for searches
-* @param useParameters {array} an array of parameter names to search with
-* @example
-* stopforumspam.SearchWith(['ip', 'email', 'username']);
-*/
-sfs.SearchWith = function (useParameters) {
-	_.each(sfs.config.searchParameters, function(parameter) {
-		if (useParameters.indexOf(parameter.name) > -1) {
-			parameter.searchWith = true;
-		}
-		else {
-			parameter.searchWith = false;
-		}
-	});
-};
-
-/**
-* Decide which parameters to automatically submit when matched using checkAndSubmit
-* @param useParameters {array} an array of parameter names required to be matched for automatic
-* 	submission
-* @example
-* stopforumspam.SubmitWhenMatched(['ip', 'email', 'username']);
-*/
-sfs.SubmitWhenMatched = function (useParameters) {
-	_.each(sfs.config.searchParameters, function(parameter) {
-		if (useParameters.indexOf(parameter.name) > -1) {
-			parameter.submitWhen = true;
-		}
-		else {
-			parameter.submitWhen = false;
-		}
-	});
 };
 
 module.exports = sfs;

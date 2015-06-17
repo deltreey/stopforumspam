@@ -197,10 +197,6 @@ describe('stopforumspam node module', function () {
 		});
 	});
 
-	describe('#checkAndSubmit', function () {
-		// TODO: test this
-	});
-
 	describe('#Key', function () {
 		it('should set the configuration apiKey setting', function () {
 			// Given: the apiKey set explicitly, and a new key value
@@ -267,38 +263,6 @@ describe('stopforumspam node module', function () {
 			assert.equal(false, _.findWhere(stopforumspam.config.searchParameters, { name: 'username' }).searchWith);
 			assert.equal(false, _.findWhere(stopforumspam.config.searchParameters, { name: 'ip' }).searchWith);
 			assert.equal(false, _.findWhere(stopforumspam.config.searchParameters, { name: 'email' }).searchWith);
-		});
-	});
-
-	describe('#SubmitWhenMatched', function () {
-		it('should set the configuration values to true for the searchParameters with matching names', function () {
-			// Given: a specific set of values in the config
-			_.findWhere(stopforumspam.config.searchParameters, { name: 'username' }).submitWhen = true;
-			_.findWhere(stopforumspam.config.searchParameters, { name: 'ip' }).submitWhen = false;
-			_.findWhere(stopforumspam.config.searchParameters, { name: 'email' }).submitWhen = false;
-
-			// When: we call SubmitWhenMatched with those parameters
-			stopforumspam.SubmitWhenMatched(['ip', 'username', 'email']);
-
-			// Then: they should all be true
-			assert.equal(true, _.findWhere(stopforumspam.config.searchParameters, { name: 'username' }).submitWhen);
-			assert.equal(true, _.findWhere(stopforumspam.config.searchParameters, { name: 'ip' }).submitWhen);
-			assert.equal(true, _.findWhere(stopforumspam.config.searchParameters, { name: 'email' }).submitWhen);
-		});
-
-		it('should set the configuration values to false for the searchParameters without matching names', function () {
-			// Given: a specific set of values in the config
-			_.findWhere(stopforumspam.config.searchParameters, { name: 'username' }).submitWhen = true;
-			_.findWhere(stopforumspam.config.searchParameters, { name: 'ip' }).submitWhen = false;
-			_.findWhere(stopforumspam.config.searchParameters, { name: 'email' }).submitWhen = false;
-
-			// When: we call SubmitWhenMatched with those parameters
-			stopforumspam.SubmitWhenMatched([]);
-
-			// Then: they should all be true
-			assert.equal(false, _.findWhere(stopforumspam.config.searchParameters, { name: 'username' }).submitWhen);
-			assert.equal(false, _.findWhere(stopforumspam.config.searchParameters, { name: 'ip' }).submitWhen);
-			assert.equal(false, _.findWhere(stopforumspam.config.searchParameters, { name: 'email' }).submitWhen);
 		});
 	});
 });

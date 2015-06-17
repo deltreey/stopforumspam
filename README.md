@@ -48,16 +48,6 @@ sfsUser.submit('This text is an optional way to tell SFS why you submitted the u
 // you can use .then() if you want to wait until after the submit, though I can't imagine why
 ```
 
-Or better yet, automatically submit the spammer if they're found
-```js
-sfs.Key('my-api-key');
-sfsUser.checkAndSubmit('Found on StopForumSpam.com and resubmitted.')
-	.then(function (result) {
-		// result is just like isSpammer above, so you can use the information for your needs,
-		// or bypass the then function altogether
-	});
-});
-```
 
 If you would prefer to call things manually, that's fine too.  For example:
 ```js
@@ -80,22 +70,12 @@ if (sfsUser.isSpammerSync()) {
 }
 ```
 
-## Configuration
-
-By default, email and IP address is the only thing checked against StopForumSpam.com.  You can change this using the `SearchWith` function.
+These are promises, so you can capture errors as well if you like.
 ```js
-stopforumspam.SearchWith(['ip', 'username']);
-// searches will not check email, but will check username & ip
-stopforumspam.SearchWith(['email']);
-// searches will only check emails
-```
-
-By default, checkAndSubmit only submits spammers who match both IP & email on StopForumSpam.com.  This can be changed using the `SubmitWhenMatched` function.
-```js
-stopforumspam.SubmitWhenMatched(['ip', 'username']);
-// searches will ignore email results, but will submit if both username & ip match
-stopforumspam.SubmitWhenMatched([]);
-// submissions will happen if any value that is searched for matches
+sfsUser.submit('This text is an optional way to tell SFS why you submitted the user.')
+	.catch(function (error) {
+		// deal with the error that occured while submitting
+	});
 ```
 
 ## License
