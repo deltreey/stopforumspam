@@ -1,6 +1,6 @@
 {
   "name": "stopforumspam",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A wrapper for the StopForumSpam.com REST API",
   "author": {
     "name": "Ted",
@@ -20,7 +20,8 @@
     "lodash": "^3.9.3",
     "q": "^1.4.1",
     "request": "^2.57.0",
-    "sprintf-js": "^1.0.2"
+    "sprintf-js": "^1.0.2",
+    "utf8": "^2.1.0"
   },
   "devDependencies": {
     "grunt-cli": "^0.1.13",
