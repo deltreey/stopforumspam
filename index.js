@@ -4,7 +4,8 @@ var request = require('request'),
 		sprintf = require('sprintf-js').sprintf,
 		_ = require('lodash'),
 		Q = require('q'),
-		utf8 = require('utf8');
+		utf8 = require('utf8'),
+		validator = require('validator');
 
 /**
 * StopForumSpam Module
@@ -63,25 +64,42 @@ sfs.isSpammer = function (userObject) {
 	var deferred = Q.defer();
 
 	var url = sfs.config.url + _.findWhere(sfs.config.routes, { name: 'search' }).path;
+	var fail = false;
 	_.each(sfs.config.searchParameters, function (parameter) {
 		if (userObject[parameter.name]) {
+			if (parameter.name === 'email' && userObject[parameter.name] && !validator.isEmail(userObject[parameter.name])) {
+				fail = 'email';
+			}
+			else if (parameter.name === 'ip' && userObject[parameter.name] && !validator.isIP(userObject[parameter.name], 4)) {
+				fail = 'ip';
+			}
 			url += sprintf(parameter.searchAdd, encodeURIComponent(utf8.encode(userObject[parameter.name])));
 		}
 	});
 
-	request(url, function (error, response, body) {
-		if (error) { return deferred.reject(error); }
-		if (response.statusCode !== 200) { return deferred.reject(new Error('Response Status: ' + response.statusCode + ', ' + body)); }
-		var result = false;
-		var jsBody = JSON.parse(body);
+	if (fail) {
+		if (fail === 'email') {
+			deferred.reject(new Error('The searched email is not a valid email address'));
+		}
+		else if (fail === 'ip') {
+			deferred.reject(new Error('The searched IP is not a valid IPv4 address'));
+		}
+	}
+	else {
+		request(url, function (error, response, body) {
+			if (error) { return deferred.reject(error); }
+			if (response.statusCode !== 200) { return deferred.reject(new Error('Response Status: ' + response.statusCode + ', ' + body)); }
+			var result = false;
+			var jsBody = JSON.parse(body);
 
-		_.each(sfs.config.searchParameters, function (parameter) {
-			if (userObject[parameter.name] && jsBody[parameter.name].appears > 0) {
-				result = JSON.parse(body);
-			}
+			_.each(sfs.config.searchParameters, function (parameter) {
+				if (userObject[parameter.name] && jsBody[parameter.name].appears > 0) {
+					result = JSON.parse(body);
+				}
+			});
+			deferred.resolve(result);
 		});
-		deferred.resolve(result);
-	});
+	}
 
 	return deferred.promise;
 };
@@ -160,6 +178,12 @@ sfs.submitSync = function* (userObject, evidence) {
 * @param username {string} the username of the user
 */
 sfs.User = function (ip, email, username) {
+	if (email && !validator.isEmail(email)) {
+		throw new Error('The email address is not a valid email address');
+	}
+	if (ip && !validator.isIP(ip)) {
+		throw new Error('The IP address is not a valid IPv4 address');
+	}
 	return {
 		ip: ip,
 		email: email,

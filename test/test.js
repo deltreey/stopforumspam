@@ -105,6 +105,23 @@ describe('stopforumspam node module', function () {
 						done(error);
 					});
 			});
+
+			it('throws an error on invalid IP', function (done) {
+				// Given: an invalid IP address
+				var ip = 'FE80:0000:0000:0000:0202:B3FF:FE1E:8329';	//IPv6 is invalid
+
+				// When: we call isSpammer with the IP address
+				stopforumspam.isSpammer({ ip: ip })
+
+				// Then: we should see an error occur
+					.then(function () {
+						done(new Error('This should throw an error.'));
+					})
+					.catch(function (error) {
+						assert.equal('Error: The searched IP is not a valid IPv4 address', error.toString());
+						done();
+					});
+			});
 		});
 
 		describe('@email', function () {
@@ -140,6 +157,23 @@ describe('stopforumspam node module', function () {
 					})
 					.catch(function (error) {
 						done(error);
+					});
+			});
+
+			it('throws an error on invalid email', function (done) {
+				// Given: an invalid email address
+				var email = 'thisIsNot@nEmail';	//not a real email
+
+				// When: we call isSpammer with the IP address
+				stopforumspam.isSpammer({ email: email })
+
+				// Then: we should see an error occur
+					.then(function () {
+						done(new Error('This should throw an error.'));
+					})
+					.catch(function (error) {
+						assert.equal('Error: The searched email is not a valid email address', error.toString());
+						done();
 					});
 			});
 		});

@@ -21,6 +21,7 @@ var stopforumspam = require('stopforumspam');
 The simplest way to use this is to create a user like this
 ```js
 var sfsUser = stopforumspam.User('127.0.0.1', 'test@test.com', 'testUserName');
+// REMEMBER!  StopForumSpam.com only supports IPv4, not IPv6 addresses
 ```
 
 Then you can check the stopforumspam.com database easily.

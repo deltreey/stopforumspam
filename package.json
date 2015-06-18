@@ -21,7 +21,8 @@
     "q": "^1.4.1",
     "request": "^2.57.0",
     "sprintf-js": "^1.0.2",
-    "utf8": "^2.1.0"
+    "utf8": "^2.1.0",
+    "validator": "^3.40.1"
   },
   "devDependencies": {
     "grunt-cli": "^0.1.13",
