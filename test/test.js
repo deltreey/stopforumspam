@@ -1,6 +1,5 @@
 'use strict';
-var assert = require('assert'),
-		_ = require('lodash');
+var assert = require('assert');
 var stopforumspam = require('../');
 
 describe('stopforumspam node module', function () {
@@ -17,20 +16,14 @@ describe('stopforumspam node module', function () {
 				}],
 				searchParameters: [{
 					name: 'ip',
-					searchWith: true,
-					submitWhen: true,
 					searchAdd: '&ip=%s',
 					submitAdd: '&ip_addr=%s'
 				},{
 					name: 'email',
-					searchWith: true,
-					submitWhen: true,
 					searchAdd: '&email=%s',
 					submitAdd: '&email=%s'
 				},{
 					name: 'username',
-					searchWith: false,
-					submitWhen: false,
 					searchAdd: '&username=%s',
 					submitAdd: '&username=%s'
 				}],
@@ -41,12 +34,9 @@ describe('stopforumspam node module', function () {
 
 	describe('#isSpammer', function () {
 		describe('@username', function () {
-			it('can find users by username, when set to true', function (done) {
-				// Given: a common username likely to be a spammer, and the stopforumspam config set to use username only
+			it('can find users by username alone', function (done) {
+				// Given: a common username likely to be a spammer
 				var username = 'username';
-				_.findWhere(stopforumspam.config.searchParameters, { name: 'username' }).searchWith = true;
-				_.findWhere(stopforumspam.config.searchParameters, { name: 'ip' }).searchWith = false;
-				_.findWhere(stopforumspam.config.searchParameters, { name: 'email' }).searchWith = false;
 				
 				// When: we call isSpammer
 				stopforumspam.isSpammer({ username: username })
@@ -62,12 +52,9 @@ describe('stopforumspam node module', function () {
 					});
 			});
 
-			it('returns false when only username is selected and username is not fonud', function (done) {
-				// Given: a very unusual username unlikely to even be permitted, and the stopforumspam config set to use username only
+			it('returns false when only username is provided and username is not fonud', function (done) {
+				// Given: a very unusual username unlikely to even be permitted
 				var username = 'Z5Anymsu1SYIuY6m4QG9P2T6E3O2yzdbBpo45Ura08uZE';
-				_.findWhere(stopforumspam.config.searchParameters, { name: 'username' }).searchWith = true;
-				_.findWhere(stopforumspam.config.searchParameters, { name: 'ip' }).searchWith = false;
-				_.findWhere(stopforumspam.config.searchParameters, { name: 'email' }).searchWith = false;
 				
 				// When: we call isSpammer
 				stopforumspam.isSpammer({ username: username })
@@ -84,12 +71,9 @@ describe('stopforumspam node module', function () {
 		});
 
 		describe('@ip', function () {
-			it('can find users by ip, when set to true', function (done) {
-				// Given: a common ip likely to be a spammer, and the stopforumspam config set to use ip only
+			it('can find users by ip alone', function (done) {
+				// Given: a common ip likely to be a spammer
 				var ip = '37.57.200.173';	// top spammer on 6/15/2015
-				_.findWhere(stopforumspam.config.searchParameters, { name: 'username' }).searchWith = false;
-				_.findWhere(stopforumspam.config.searchParameters, { name: 'ip' }).searchWith = true;
-				_.findWhere(stopforumspam.config.searchParameters, { name: 'email' }).searchWith = false;
 				
 				// When: we call isSpammer
 				stopforumspam.isSpammer({ ip: ip })
@@ -105,12 +89,9 @@ describe('stopforumspam node module', function () {
 					});
 			});
 			
-			it('returns false when only ip is selected and ip is not fonud', function (done) {
-				// Given: a very safe ip unlikely to be considered spam, and the stopforumspam config set to use ip only
+			it('returns false when only ip is provided and ip is not fonud', function (done) {
+				// Given: a very safe ip unlikely to be considered spam
 				var ip = '8.8.8.8';	// google's DNS, probably whitelisted
-				_.findWhere(stopforumspam.config.searchParameters, { name: 'username' }).searchWith = false;
-				_.findWhere(stopforumspam.config.searchParameters, { name: 'ip' }).searchWith = true;
-				_.findWhere(stopforumspam.config.searchParameters, { name: 'email' }).searchWith = false;
 				
 				// When: we call isSpammer
 				stopforumspam.isSpammer({ ip: ip })
@@ -127,12 +108,9 @@ describe('stopforumspam node module', function () {
 		});
 
 		describe('@email', function () {
-			it('can find users by email, when set to true', function (done) {
-				// Given: a common email likely to be a spammer, and the stopforumspam config set to use email only
+			it('can find users by email alone', function (done) {
+				// Given: a common email likely to be a spammer
 				var email = 'cuanegbuytodyd@gmail.com';	// top spammer on 6/15/2015
-				_.findWhere(stopforumspam.config.searchParameters, { name: 'username' }).searchWith = false;
-				_.findWhere(stopforumspam.config.searchParameters, { name: 'ip' }).searchWith = false;
-				_.findWhere(stopforumspam.config.searchParameters, { name: 'email' }).searchWith = true;
 				
 				// When: we call isSpammer
 				stopforumspam.isSpammer({ email: email })
@@ -148,12 +126,9 @@ describe('stopforumspam node module', function () {
 					});
 			});
 			
-			it('returns false when only email is selected and email is not fonud', function (done) {
-				// Given: a very safe email unlikely to be considered spam, and the stopforumspam config set to use email only
+			it('returns false when only email is provided and email is not fonud', function (done) {
+				// Given: a very safe email unlikely to be considered spam
 				var email = 'support@gmail.com';	// google's support team, probably whitelisted
-				_.findWhere(stopforumspam.config.searchParameters, { name: 'username' }).searchWith = false;
-				_.findWhere(stopforumspam.config.searchParameters, { name: 'ip' }).searchWith = false;
-				_.findWhere(stopforumspam.config.searchParameters, { name: 'email' }).searchWith = true;
 				
 				// When: we call isSpammer
 				stopforumspam.isSpammer({ email: email })

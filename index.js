@@ -76,7 +76,7 @@ sfs.isSpammer = function (userObject) {
 		var jsBody = JSON.parse(body);
 
 		_.each(sfs.config.searchParameters, function (parameter) {
-			if (parameter.searchWith && userObject[parameter.name] && jsBody[parameter.name].appears > 0) {
+			if (userObject[parameter.name] && jsBody[parameter.name].appears > 0) {
 				result = JSON.parse(body);
 			}
 		});

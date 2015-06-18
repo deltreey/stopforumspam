@@ -48,10 +48,17 @@ sfsUser.submit('This text is an optional way to tell SFS why you submitted the u
 // you can use .then() if you want to wait until after the submit, though I can't imagine why
 ```
 
-
 If you would prefer to call things manually, that's fine too.  For example:
 ```js
 stopforumspam.isSpammer({ ip: '123.456.789.100', email: 'test@test.com', username: 'Spammer!' })
+	.then(function (result) {
+		// result is just like above
+	});
+```
+
+You don't need to search with every parameter.  You can search only for one or two if you like.
+```js
+stopforumspam.isSpammer({ ip: '123.456.789.100' })
 	.then(function (result) {
 		// result is just like above
 	});
