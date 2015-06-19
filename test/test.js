@@ -9,7 +9,7 @@ describe('stopforumspam node module', function () {
 				url: 'http://stopforumspam.com',
 				routes: [{
 					name: 'search',
-					path: '/api?f=json'
+					path: '/api?f=json&nobadusername'
 				},{
 					name: 'submit',
 					path: '/add.php?api_key=%s'

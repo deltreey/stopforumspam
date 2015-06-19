@@ -20,7 +20,7 @@ var sfs = {
 		url: 'http://stopforumspam.com',
 		routes: [{
 			name: 'search',
-			path: '/api?f=json'
+			path: '/api?f=json&nobadusername'	// ignore partial username string search
 		},{
 			name: 'submit',
 			path: '/add.php?api_key=%s'
@@ -59,6 +59,9 @@ var sfs = {
 *   //     confidence: 90.2 } }
 * });
 * @returns Promise which returns true if the user is found on StopForumSpam.com
+* @throws throws an error if the email or IP is passed and invalid or the IP is not IPv4.
+* 	Stopforumsspam.com does not support IPv6 addresses.
+* @throws throws any error it recieves from the response, including status codes that are not 200
 */
 sfs.isSpammer = function (userObject) {
 	var deferred = Q.defer();
@@ -105,7 +108,7 @@ sfs.isSpammer = function (userObject) {
 };
 
 /**
-* Syncronous version of isSpammer
+* Synchronous version of isSpammer
 * Uses ES6 yield trick https://github.com/luciotato/waitfor-ES6#the-funny-thing-is
 */
 sfs.isSpammerSync = function* (userObject) {
@@ -123,6 +126,10 @@ sfs.isSpammerSync = function* (userObject) {
 * stopforumspam.submit({ ip: '123.456.789.100', email: 'test@test.com', username: 'Spammer!' }, 'Caught You!');
 * @param evidence {string} (optional) you can tell StopForumSpam.com your reasoning if you like
 * @returns Promise
+* @throws throws an error if you have not set the API key
+* @throws throws an error if you don't pass a user object with all of the parameters
+* 	(ip, email, & username)
+* @throws throws any error it recieves from the response, including status codes that are not 200
 */
 sfs.submit = function (userObject, evidence) {
 	var deferred = Q.defer();
@@ -162,7 +169,7 @@ sfs.submit = function (userObject, evidence) {
 };
 
 /**
-* Syncronous version of submit
+* Synchronous version of submit
 * Uses ES6 yield trick https://github.com/luciotato/waitfor-ES6#the-funny-thing-is
 */
 sfs.submitSync = function* (userObject, evidence) {
@@ -176,12 +183,14 @@ sfs.submitSync = function* (userObject, evidence) {
 * @param ip {string} the IP address of the user
 * @param email {string} the email address of the user
 * @param username {string} the username of the user
+* @throws throws an error if the email or IP is passed and invalid or the IP is not IPv4.
+* 	Stopforumsspam.com does not support IPv6 addresses.
 */
 sfs.User = function (ip, email, username) {
 	if (email && !validator.isEmail(email)) {
 		throw new Error('The email address is not a valid email address');
 	}
-	if (ip && !validator.isIP(ip)) {
+	if (ip && !validator.isIP(ip, 4)) {
 		throw new Error('The IP address is not a valid IPv4 address');
 	}
 	return {
