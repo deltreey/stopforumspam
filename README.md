@@ -1,6 +1,12 @@
 # StopForumSpam
 
-[![Join the chat at https://gitter.im/deltreey/stopforumspam](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/deltreey/stopforumspam?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)[![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][daviddm-image]][daviddm-url][![Code Climate](https://codeclimate.com/github/deltreey/stopforumspam/badges/gpa.svg)](https://codeclimate.com/github/deltreey/stopforumspam)[![Test Coverage](https://codeclimate.com/github/deltreey/stopforumspam/badges/coverage.svg)](https://codeclimate.com/github/deltreey/stopforumspam/coverage)[![bitHound Score](https://www.bithound.io/github/deltreey/stopforumspam/badges/score.svg?)](https://www.bithound.io/github/deltreey/stopforumspam)
+[![Join the chat at https://gitter.im/deltreey/stopforumspam](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/deltreey/stopforumspam?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url]
+[![Dependency Status][daviddm-image]][daviddm-url]
+[![Codacy Badge](https://www.codacy.com/project/badge/c9141dcb2cf74c61b647a6a3989e6af6)](https://www.codacy.com/app/suicidolt/stopforumspam)
+[![Code Climate](https://codeclimate.com/github/deltreey/stopforumspam/badges/gpa.svg)](https://codeclimate.com/github/deltreey/stopforumspam)
+[![Test Coverage](https://codeclimate.com/github/deltreey/stopforumspam/badges/coverage.svg)](https://codeclimate.com/github/deltreey/stopforumspam/coverage)
+[![bitHound Score](https://www.bithound.io/github/deltreey/stopforumspam/badges/score.svg?)](https://www.bithound.io/github/deltreey/stopforumspam)
 
 > A nodejs wrapper for the [StopForumSpam.com][sfs] REST API
 
