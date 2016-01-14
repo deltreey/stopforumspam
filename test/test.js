@@ -259,7 +259,7 @@ describe('stopforumspam node module', function () {
 			// Given: a spammer username, a null email, and an undefined ip
 			var username = 'username';
 			var email = null;
-			var ip = undefined;
+			var ip = undefined; // jshint ignore:line
 			
 			// When: we call isSpammer
 			stopforumspam.isSpammer({ username: username, email: email, ip: ip })
