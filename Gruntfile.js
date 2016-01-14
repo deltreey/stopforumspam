@@ -26,8 +26,8 @@ module.exports = function (grunt) {
         src: ['index.js', 'test/*.js', 'README.md'],
         options: {
           destination: 'documentation',
-          template : "node_modules/grunt-jsdoc/node_modules/ink-docstrap/template",
-          configure : "node_modules/grunt-jsdoc/node_modules/ink-docstrap/template/jsdoc.conf.json"
+          template : "node_modules/ink-docstrap/template",
+          configure : "./jsdoc.conf.json"
         }
       }
     },
