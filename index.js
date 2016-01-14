@@ -8,9 +8,9 @@ var request = require('request'),
 		validator = require('validator');
 
 /**
-* StopForumSpam Module
-* @exports stopforumspam
-* @namespace sfs
+	* StopForumSpam Module
+	* @exports stopforumspam
+	* @namespace sfs
 */
 var sfs = {
 	/**
@@ -43,25 +43,25 @@ var sfs = {
 };
 
 /**
-* Checks if a user is a spammer.  Pass only the parameters you wish to search for
-* @param userObject {object} a hashlike object with each of the  parameters to search for.
-* 	Search for as many or as few as you wish.
-* @example
-* stopforumspam.isSpammer({ ip: '123.456.789.100', email: 'test@test.com', username: 'Spammer!' })
-*   .then(function (result) {
-*   // result if false if not found
-*   // result = {
-*   //   success: 1,
-*   //   username: {
-*   //     lastseen: '2015-03-09 15:22:49',
-*   //     frequency: 3830,
-*   //     appears: 1,
-*   //     confidence: 90.2 } }
-* });
-* @returns Promise which returns true if the user is found on StopForumSpam.com
-* @throws throws an error if the email or IP is passed and invalid or the IP is not IPv4.
-* 	Stopforumsspam.com does not support IPv6 addresses.
-* @throws throws any error it recieves from the response, including status codes that are not 200
+	* Checks if a user is a spammer.  Pass only the parameters you wish to search for
+	* @param userObject {object} a hashlike object with each of the  parameters to search for.
+	* 	Search for as many or as few as you wish.
+	* @example
+	* stopforumspam.isSpammer({ ip: '123.456.789.100', email: 'test@test.com', username: 'Spammer!' })
+	*   .then(function (result) {
+	*   // result if false if not found
+	*   // result = {
+	*   //   success: 1,
+	*   //   username: {
+	*   //     lastseen: '2015-03-09 15:22:49',
+	*   //     frequency: 3830,
+	*   //     appears: 1,
+	*   //     confidence: 90.2 } }
+	* });
+	* @returns Promise which returns true if the user is found on StopForumSpam.com
+	* @throws throws an error if the email or IP is passed and invalid or the IP is not IPv4.
+	* 	Stopforumsspam.com does not support IPv6 addresses.
+	* @throws throws any error it recieves from the response, including status codes that are not 200
 */
 sfs.isSpammer = function (userObject) {
 	var deferred = Q.defer();
@@ -108,28 +108,28 @@ sfs.isSpammer = function (userObject) {
 };
 
 /**
-* Synchronous version of isSpammer
-* Uses ES6 yield trick https://github.com/luciotato/waitfor-ES6#the-funny-thing-is
+	* Synchronous version of isSpammer
+	* Uses ES6 yield trick https://github.com/luciotato/waitfor-ES6#the-funny-thing-is
 */
 sfs.isSpammerSync = function* (userObject) {
 	yield [sfs.isSpammer, userObject];
 };
 
 /**
-* Submits the user to StopForumSpam.com under your API key
-* Requires config.apiKey is set
-* @param userObject must contain properties for each searchParameter
-* 	empty parameters will throw an error
-* @example
-* stopforumspam.Key('some-api-key');
-* // or stopforumspam.config.apiKey = 'some-api-key';
-* stopforumspam.submit({ ip: '123.456.789.100', email: 'test@test.com', username: 'Spammer!' }, 'Caught You!');
-* @param evidence {string} (optional) you can tell StopForumSpam.com your reasoning if you like
-* @returns Promise
-* @throws throws an error if you have not set the API key
-* @throws throws an error if you don't pass a user object with all of the parameters
-* 	(ip, email, & username)
-* @throws throws any error it recieves from the response, including status codes that are not 200
+	* Submits the user to StopForumSpam.com under your API key
+	* Requires config.apiKey is set
+	* @param userObject must contain properties for each searchParameter
+	* 	empty parameters will throw an error
+	* @example
+	* stopforumspam.Key('some-api-key');
+	* // or stopforumspam.config.apiKey = 'some-api-key';
+	* stopforumspam.submit({ ip: '123.456.789.100', email: 'test@test.com', username: 'Spammer!' }, 'Caught You!');
+	* @param evidence {string} (optional) you can tell StopForumSpam.com your reasoning if you like
+	* @returns Promise
+	* @throws throws an error if you have not set the API key
+	* @throws throws an error if you don't pass a user object with all of the parameters
+	* 	(ip, email, & username)
+	* @throws throws any error it recieves from the response, including status codes that are not 200
 */
 sfs.submit = function (userObject, evidence) {
 	var deferred = Q.defer();
@@ -169,22 +169,22 @@ sfs.submit = function (userObject, evidence) {
 };
 
 /**
-* Synchronous version of submit
-* Uses ES6 yield trick https://github.com/luciotato/waitfor-ES6#the-funny-thing-is
+	* Synchronous version of submit
+	* Uses ES6 yield trick https://github.com/luciotato/waitfor-ES6#the-funny-thing-is
 */
 sfs.submitSync = function* (userObject, evidence) {
 	yield [sfs.submit, userObject, evidence];
 };
 
 /**
-* Creates a user object to utilize the APi in a more human manner
-* @memberOf sfs
-* @namespace User
-* @param ip {string} the IP address of the user
-* @param email {string} the email address of the user
-* @param username {string} the username of the user
-* @throws throws an error if the email or IP is passed and invalid or the IP is not IPv4.
-* 	Stopforumsspam.com does not support IPv6 addresses.
+	* Creates a user object to utilize the APi in a more human manner
+	* @memberOf sfs
+	* @namespace User
+	* @param ip {string} the IP address of the user
+	* @param email {string} the email address of the user
+	* @param username {string} the username of the user
+	* @throws throws an error if the email or IP is passed and invalid or the IP is not IPv4.
+	* 	Stopforumsspam.com does not support IPv6 addresses.
 */
 sfs.User = function (ip, email, username) {
 	if (email && !validator.isEmail(email)) {
@@ -201,46 +201,46 @@ sfs.User = function (ip, email, username) {
 };
 
 /**
-* The User object implements isSpammer
-* @example
-* var sfsUser = stopforumspam.User('123.456.789.100', 'test@test.com', 'Spammer!');
-* sfsUser.isSpammer().then(function (result) {
-*   // do something with result
-* });
+	* The User object implements isSpammer
+	* @example
+	* var sfsUser = stopforumspam.User('123.456.789.100', 'test@test.com', 'Spammer!');
+	* sfsUser.isSpammer().then(function (result) {
+	*   // do something with result
+	* });
 */
 sfs.User.prototype.isSpammer = function () {
 	return sfs.isSpammer(this);
 };
 
 /**
-* The User object implements isSpammerSync
+	* The User object implements isSpammerSync
 */
 sfs.User.prototype.isSpammerSync = function* () {
 	yield [this.isSpammer];
 };
 
 /**
-* The User object implements submit
-* @example
-* var sfsUser = stopforumspam.User('123.456.789.100', 'test@test.com', 'Spammer!');
-* sfsUser.submit();
+	* The User object implements submit
+	* @example
+	* var sfsUser = stopforumspam.User('123.456.789.100', 'test@test.com', 'Spammer!');
+	* sfsUser.submit();
 */
 sfs.User.prototype.submit = function (evidence) {
 	return sfs.submit(this, evidence);
 };
 
 /**
-* The User object implements submitSync
+	* The User object implements submitSync
 */
 sfs.User.prototype.submitSync = function* (evidence) {
 	yield [this.submit, evidence];
 };
 
 /**
-* Getter & Setter for the API Key
-* @param key {string} The API Key for StopForumSpam.com  Necessary for
-* 	submitting users to the database.  Unset it with an empty string or false.
-* @returns {string} The current API Key as it is set 
+	* Getter & Setter for the API Key
+	* @param key {string} The API Key for StopForumSpam.com  Necessary for
+	* 	submitting users to the database.  Unset it with an empty string or false.
+	* @returns {string} The current API Key as it is set 
 */
 sfs.Key = function(key) {
 	if (key !== undefined) {
