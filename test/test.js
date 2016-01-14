@@ -177,6 +177,103 @@ describe('stopforumspam node module', function () {
 					});
 			});
 		});
+
+		it('finds spammers by all parameters', function (done) {
+			// Given: a spammer ip, username, and email
+			var username = 'username';
+			var email = 'cuanegbuytodyd@gmail.com';	// top spammer on 6/15/2015
+			var ip = '37.57.200.173';	// top spammer on 6/15/2015
+			
+			// When: we call isSpammer
+			stopforumspam.isSpammer({ username: username, email: email, ip: ip })
+
+			// Then: we should see the data come back truthish as an object
+				.then(function (result) {
+					assert(result);
+					assert.equal(typeof(result), typeof({}));
+					done();
+				})
+				.catch(function (error) {
+					done(error);
+				});
+		});
+
+		it('finds users by email and username', function (done) {
+			// Given: a common username likely to be a spammer, and a spammer email
+			var username = 'username';
+			var email = 'cuanegbuytodyd@gmail.com';	// top spammer on 6/15/2015
+			
+			// When: we call isSpammer
+			stopforumspam.isSpammer({ username: username, email: email })
+
+			// Then: we should see the data come back truthish as an object
+				.then(function (result) {
+					assert(result);
+					assert.equal(typeof(result), typeof({}));
+					done();
+				})
+				.catch(function (error) {
+					done(error);
+				});
+		});
+
+		it('finds users by ip and username', function (done) {
+			// Given: a common username likely to be a spammer, and a spammer ip
+			var username = 'username';
+			var ip = '37.57.200.173';	// top spammer on 6/15/2015
+			
+			// When: we call isSpammer
+			stopforumspam.isSpammer({ username: username, ip: ip })
+
+			// Then: we should see the data come back truthish as an object
+				.then(function (result) {
+					assert(result);
+					assert.equal(typeof(result), typeof({}));
+					done();
+				})
+				.catch(function (error) {
+					done(error);
+				});
+		});
+
+		it('finds users by ip and email', function (done) {
+			// Given: a spammer ip and email
+			var email = 'cuanegbuytodyd@gmail.com';	// top spammer on 6/15/2015
+			var ip = '37.57.200.173';	// top spammer on 6/15/2015
+			
+			// When: we call isSpammer
+			stopforumspam.isSpammer({ email: email, ip: ip })
+
+			// Then: we should see the data come back truthish as an object
+				.then(function (result) {
+					assert(result);
+					assert.equal(typeof(result), typeof({}));
+					done();
+				})
+				.catch(function (error) {
+					done(error);
+				});
+		});
+
+		it('does not hang with null/undefined parameters', function (done) {
+			// Given: a spammer username, a null email, and an undefined ip
+			var username = 'username';
+			var email = null;
+			var ip = undefined;
+			
+			// When: we call isSpammer
+			stopforumspam.isSpammer({ username: username, email: email, ip: ip })
+
+			// Then: we should see the data come back truthish as an object
+				.then(function (result) {
+					assert(result);
+					assert.equal(typeof(result), typeof({}));
+					done();
+				})
+				.catch(function (error) {
+					done(error);
+				});
+		});
 	});
 
 	// skip submit function because it adds to SFS and has to be cleared manually

@@ -34,8 +34,7 @@ module.exports = function (grunt) {
     mochacli: {
       options: {
         reporter: 'nyan',
-        bail: true,
-        'harmony-generators': true
+        bail: true
       },
       all: ['test/*.js']
     },
