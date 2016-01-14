@@ -26,7 +26,7 @@ var sfsUser = stopforumspam.User('127.0.0.1', 'test@test.com', 'testUserName');
 
 Then you can check the stopforumspam.com database easily.
 ```js
-sfsUser.isSpammer().then(function (result) {
+sfsUser.isSpammer()
 	 .then(function (result) {
 			// result is false if not found
 			
@@ -38,7 +38,6 @@ sfsUser.isSpammer().then(function (result) {
 			//     frequency: 3830,
 			//     appears: 1,
 			//     confidence: 90.2 } }
-);
 });
 ```
 
@@ -78,10 +77,10 @@ if (sfsUser.isSpammerSync()) {
 }
 ```
 
-These are promises, so you can capture errors as well if you like.
+These are [promises](https://github.com/kriskowal/q/tree/v1.4.1), so you can capture errors as well if you like.
 ```js
 sfsUser.submit('This text is an optional way to tell SFS why you submitted the user.')
-	.catch(function (error) {
+	.fail(function (error) {
 		// deal with the error that occured while submitting
 	});
 ```
