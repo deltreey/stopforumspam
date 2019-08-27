@@ -66,7 +66,7 @@ var sfs = {
 sfs.isSpammer = function (userObject) {
 	var deferred = Q.defer();
 
-	var url = sfs.config.url + _.findWhere(sfs.config.routes, { name: 'search' }).path;
+	var url = sfs.config.url + _.find(sfs.config.routes, { name: 'search' }).path;
 	var fail = false;
 	_.each(sfs.config.searchParameters, function (parameter) {
 		if (userObject[parameter.name]) {
@@ -137,7 +137,7 @@ sfs.submit = function (userObject, evidence) {
 		deferred.reject(new Error('You cannot submit spammers without an API Key.'));
 	}
 	else {
-		var url = sfs.config.url + sprintf(_.findWhere(sfs.config.routes, { name: 'submit' }).path, sfs.config.apiKey);
+		var url = sfs.config.url + sprintf(_.find(sfs.config.routes, { name: 'submit' }).path, sfs.config.apiKey);
 		var error = false;
 		_.each(sfs.config.searchParameters, function (parameter) {
 			if (!userObject[parameter.name]) {
