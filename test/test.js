@@ -36,7 +36,7 @@ describe('stopforumspam node module', function () {
 		describe('@username', function () {
 			it('can find users by username alone', function (done) {
 				// Given: a common username likely to be a spammer
-				var username = 'username';
+				var username = 'Adumn';
 				
 				// When: we call isSpammer
 				stopforumspam.isSpammer({ username: username })
@@ -73,7 +73,7 @@ describe('stopforumspam node module', function () {
 		describe('@ip', function () {
 			it('can find users by ip alone', function (done) {
 				// Given: a common ip likely to be a spammer
-				var ip = '37.57.200.173';	// top spammer on 6/15/2015
+				var ip = '185.153.198.245'; // Reported Aug 27 2019
 				
 				// When: we call isSpammer
 				stopforumspam.isSpammer({ ip: ip })
@@ -127,7 +127,7 @@ describe('stopforumspam node module', function () {
 		describe('@email', function () {
 			it('can find users by email alone', function (done) {
 				// Given: a common email likely to be a spammer
-				var email = 'cuanegbuytodyd@gmail.com';	// top spammer on 6/15/2015
+				var email = 'testuser123654@yandex.ru';	// Reported Aug 27 2019
 				
 				// When: we call isSpammer
 				stopforumspam.isSpammer({ email: email })
@@ -180,9 +180,9 @@ describe('stopforumspam node module', function () {
 
 		it('finds spammers by all parameters', function (done) {
 			// Given: a spammer ip, username, and email
-			var username = 'username';
-			var email = 'cuanegbuytodyd@gmail.com';	// top spammer on 6/15/2015
-			var ip = '37.57.200.173';	// top spammer on 6/15/2015
+			var username = 'Adumn';
+			var email = 'testuser123654@yandex.ru';	// Reported Aug 27 2019
+			var ip = '185.153.198.245'; // Reported Aug 27 2019
 			
 			// When: we call isSpammer
 			stopforumspam.isSpammer({ username: username, email: email, ip: ip })
@@ -200,8 +200,8 @@ describe('stopforumspam node module', function () {
 
 		it('finds users by email and username', function (done) {
 			// Given: a common username likely to be a spammer, and a spammer email
-			var username = 'username';
-			var email = 'cuanegbuytodyd@gmail.com';	// top spammer on 6/15/2015
+			var username = 'Adumn';
+			var email = 'testuser123654@yandex.ru';	// Reported Aug 27 2019
 			
 			// When: we call isSpammer
 			stopforumspam.isSpammer({ username: username, email: email })
@@ -219,8 +219,8 @@ describe('stopforumspam node module', function () {
 
 		it('finds users by ip and username', function (done) {
 			// Given: a common username likely to be a spammer, and a spammer ip
-			var username = 'username';
-			var ip = '37.57.200.173';	// top spammer on 6/15/2015
+			var username = 'Adumn';
+			var ip = '185.153.198.245'; // Reported Aug 27 2019
 			
 			// When: we call isSpammer
 			stopforumspam.isSpammer({ username: username, ip: ip })
@@ -238,8 +238,8 @@ describe('stopforumspam node module', function () {
 
 		it('finds users by ip and email', function (done) {
 			// Given: a spammer ip and email
-			var email = 'cuanegbuytodyd@gmail.com';	// top spammer on 6/15/2015
-			var ip = '37.57.200.173';	// top spammer on 6/15/2015
+			var email = 'testuser123654@yandex.ru';	// Reported Aug 27 2019
+			var ip = '185.153.198.245'; // Reported Aug 27 2019
 			
 			// When: we call isSpammer
 			stopforumspam.isSpammer({ email: email, ip: ip })
@@ -257,7 +257,7 @@ describe('stopforumspam node module', function () {
 
 		it('does not hang with null/undefined parameters', function (done) {
 			// Given: a spammer username, a null email, and an undefined ip
-			var username = 'username';
+			var username = 'Adumn';
 			var email = null;
 			var ip = undefined; // jshint ignore:line
 			
@@ -285,8 +285,8 @@ describe('stopforumspam node module', function () {
 		describe('@username', function () {
 			it('can find users by username', function (done) {
 				// Given: a common username likely to be a spammer, and the stopforumspam config set to use username only
-				var username = 'username';
-				var ip = '37.57.200.173';	// top spammer on 6/15/2015
+				var username = 'Adumn';
+				var ip = '185.153.198.245'; // Reported Aug 27 2019
 				var email = 'kamfertina14382@mail.ru';	// second top spammer on 6/15/2015
 				
 				// When: we call submit
