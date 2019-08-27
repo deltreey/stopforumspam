@@ -17,7 +17,7 @@
     "stopforumspam spam"
   ],
   "dependencies": {
-    "lodash": "^3.9.3",
+    "lodash": "^4.17.15",
     "q": "^1.4.1",
     "request": "^2.57.0",
     "sprintf-js": "^1.0.2",
