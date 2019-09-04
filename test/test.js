@@ -91,7 +91,7 @@ describe('stopforumspam node module', function () {
 			
 			it('returns false when only ip is provided and ip is not fonud', function (done) {
 				// Given: a very safe ip unlikely to be considered spam
-				var ip = '8.8.8.8';	// google's DNS, probably whitelisted
+				var ip = '127.0.0.1';	// localhost
 				
 				// When: we call isSpammer
 				stopforumspam.isSpammer({ ip: ip })

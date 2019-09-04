@@ -22,7 +22,7 @@
     "request": "^2.57.0",
     "sprintf-js": "^1.0.2",
     "utf8": "^2.1.0",
-    "validator": "^3.40.1"
+    "validator": "^11.1.0"
   },
   "devDependencies": {
     "grunt": "0.4.5",
