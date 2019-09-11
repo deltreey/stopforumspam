@@ -6,7 +6,6 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/eba160efc0ee46ff9fb6db8cbdf0fab2)](https://www.codacy.com/manual/deltreey/stopforumspam?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=deltreey/stopforumspam&amp;utm_campaign=Badge_Grade)
 [![Code Climate](https://codeclimate.com/github/deltreey/stopforumspam/badges/gpa.svg)](https://codeclimate.com/github/deltreey/stopforumspam)
 [![Test Coverage](https://codeclimate.com/github/deltreey/stopforumspam/badges/coverage.svg)](https://codeclimate.com/github/deltreey/stopforumspam/coverage)
-[![bitHound Score](https://www.bithound.io/github/deltreey/stopforumspam/badges/score.svg)](https://www.bithound.io/github/deltreey/stopforumspam)
 
 > A nodejs wrapper for the [StopForumSpam.com][sfs] REST API
 
