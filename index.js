@@ -1,7 +1,6 @@
 'use strict';
 
 var request = require('request'),
-		sprintf = require('sprintf-js').sprintf,
 		_ = require('lodash'),
 		Q = require('q'),
 		utf8 = require('utf8'),
@@ -76,7 +75,7 @@ sfs.isSpammer = function (userObject) {
 			else if (parameter.name === 'ip' && userObject[parameter.name] && !validator.isIP(userObject[parameter.name], 4)) {
 				fail = 'ip';
 			}
-			url += sprintf(parameter.searchAdd, encodeURIComponent(utf8.encode(userObject[parameter.name])));
+			url += parameter.searchAdd.replace('%s', encodeURIComponent(utf8.encode(userObject[parameter.name])));
 		}
 	});
 
@@ -137,14 +136,14 @@ sfs.submit = function (userObject, evidence) {
 		deferred.reject(new Error('You cannot submit spammers without an API Key.'));
 	}
 	else {
-		var url = sfs.config.url + sprintf(_.find(sfs.config.routes, { name: 'submit' }).path, sfs.config.apiKey);
+		var url = sfs.config.url + _.find(sfs.config.routes, { name: 'submit' }).path.replace('%s', sfs.config.apiKey);
 		var error = false;
 		_.each(sfs.config.searchParameters, function (parameter) {
 			if (!userObject[parameter.name]) {
 				error = true;
 			}
 			else {
-				url += sprintf(parameter.searchAdd, encodeURIComponent(utf8.encode(userObject[parameter.name])));
+				url += parameter.searchAdd.replace('%s', encodeURIComponent(utf8.encode(userObject[parameter.name])));
 			}
 		});
 		if (error) {
@@ -153,7 +152,7 @@ sfs.submit = function (userObject, evidence) {
 		else {
 			if (evidence) {
 				// unescape in JS is a simple way to convert to UTF-8, which StopForumSpam requires
-				url += sprintf('&evidence=%s', encodeURIComponent(utf8.encode(evidence)));
+				url += `&evidence=${encodeURIComponent(utf8.encode(evidence))}`;
 			}
 
 			request(url, function (error, response, body) {
