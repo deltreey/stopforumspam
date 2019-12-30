@@ -36,7 +36,7 @@ describe('stopforumspam node module', function () {
 		describe('@username', function () {
 			it('can find users by username alone', function (done) {
 				// Given: a common username likely to be a spammer
-				var username = 'Adumn';
+				var username = 'homebased';
 				
 				// When: we call isSpammer
 				stopforumspam.isSpammer({ username: username })
@@ -257,7 +257,7 @@ describe('stopforumspam node module', function () {
 
 		it('does not hang with null/undefined parameters', function (done) {
 			// Given: a spammer username, a null email, and an undefined ip
-			var username = 'Adumn';
+			var username = 'homebased';
 			var email = null;
 			var ip = undefined; // jshint ignore:line
 			
