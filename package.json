@@ -30,7 +30,7 @@
     "grunt-contrib-nodeunit": "^2.0.0",
     "grunt-contrib-watch": "^1.1.0",
     "grunt-jsdoc": "1.0.0",
-    "grunt-mocha-cli": "^4.0.0",
+    "grunt-mocha-cli": "^6.0.0",
     "grunt-versioner": "^0.1.7",
     "ink-docstrap": "git+https://github.com/terryweiss/docstrap.git#4992dc633797f7d86a0861934513a6bbae2cae95",
     "jshint-stylish": "^1.0.1",
