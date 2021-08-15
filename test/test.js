@@ -36,8 +36,8 @@ describe('stopforumspam node module', function () {
 		describe('@username', function () {
 			it('can find users by username alone', function (done) {
 				// Given: a common username likely to be a spammer
-				var username = 'homebased';
-				
+				var username = 'homeautomation';
+
 				// When: we call isSpammer
 				stopforumspam.isSpammer({ username: username })
 
@@ -55,7 +55,7 @@ describe('stopforumspam node module', function () {
 			it('returns false when only username is provided and username is not fonud', function (done) {
 				// Given: a very unusual username unlikely to even be permitted
 				var username = 'Z5Anymsu1SYIuY6m4QG9P2T6E3O2yzdbBpo45Ura08uZE';
-				
+
 				// When: we call isSpammer
 				stopforumspam.isSpammer({ username: username })
 
@@ -74,7 +74,7 @@ describe('stopforumspam node module', function () {
 			it('can find users by ip alone', function (done) {
 				// Given: a common ip likely to be a spammer
 				var ip = '185.153.198.245'; // Reported Aug 27 2019
-				
+
 				// When: we call isSpammer
 				stopforumspam.isSpammer({ ip: ip })
 
@@ -88,11 +88,11 @@ describe('stopforumspam node module', function () {
 						done(error);
 					});
 			});
-			
+
 			it('returns false when only ip is provided and ip is not fonud', function (done) {
 				// Given: a very safe ip unlikely to be considered spam
 				var ip = '127.0.0.1';	// localhost
-				
+
 				// When: we call isSpammer
 				stopforumspam.isSpammer({ ip: ip })
 
@@ -128,7 +128,7 @@ describe('stopforumspam node module', function () {
 			it('can find users by email alone', function (done) {
 				// Given: a common email likely to be a spammer
 				var email = 'testuser123654@yandex.ru';	// Reported Aug 27 2019
-				
+
 				// When: we call isSpammer
 				stopforumspam.isSpammer({ email: email })
 
@@ -142,11 +142,11 @@ describe('stopforumspam node module', function () {
 						done(error);
 					});
 			});
-			
+
 			it('returns false when only email is provided and email is not fonud', function (done) {
 				// Given: a very safe email unlikely to be considered spam
 				var email = 'support@gmail.com';	// google's support team, probably whitelisted
-				
+
 				// When: we call isSpammer
 				stopforumspam.isSpammer({ email: email })
 
@@ -183,7 +183,7 @@ describe('stopforumspam node module', function () {
 			var username = 'Adumn';
 			var email = 'testuser123654@yandex.ru';	// Reported Aug 27 2019
 			var ip = '185.153.198.245'; // Reported Aug 27 2019
-			
+
 			// When: we call isSpammer
 			stopforumspam.isSpammer({ username: username, email: email, ip: ip })
 
@@ -202,7 +202,7 @@ describe('stopforumspam node module', function () {
 			// Given: a common username likely to be a spammer, and a spammer email
 			var username = 'Adumn';
 			var email = 'testuser123654@yandex.ru';	// Reported Aug 27 2019
-			
+
 			// When: we call isSpammer
 			stopforumspam.isSpammer({ username: username, email: email })
 
@@ -221,7 +221,7 @@ describe('stopforumspam node module', function () {
 			// Given: a common username likely to be a spammer, and a spammer ip
 			var username = 'Adumn';
 			var ip = '185.153.198.245'; // Reported Aug 27 2019
-			
+
 			// When: we call isSpammer
 			stopforumspam.isSpammer({ username: username, ip: ip })
 
@@ -240,7 +240,7 @@ describe('stopforumspam node module', function () {
 			// Given: a spammer ip and email
 			var email = 'testuser123654@yandex.ru';	// Reported Aug 27 2019
 			var ip = '185.153.198.245'; // Reported Aug 27 2019
-			
+
 			// When: we call isSpammer
 			stopforumspam.isSpammer({ email: email, ip: ip })
 
@@ -257,10 +257,10 @@ describe('stopforumspam node module', function () {
 
 		it('does not hang with null/undefined parameters', function (done) {
 			// Given: a spammer username, a null email, and an undefined ip
-			var username = 'homebased';
+			var username = 'homeautomation';
 			var email = null;
 			var ip = undefined; // jshint ignore:line
-			
+
 			// When: we call isSpammer
 			stopforumspam.isSpammer({ username: username, email: email, ip: ip })
 
@@ -277,18 +277,18 @@ describe('stopforumspam node module', function () {
 	});
 
 	// skip submit function because it adds to SFS and has to be cleared manually
-	describe.skip('#submit', function () {
+	describe('#submit', function () {
 		before(function() {
 	    stopforumspam.config.apiKey = '';
 	  });
 
-		describe('@username', function () {
+		describe.skip('@username', function () {
 			it('can find users by username', function (done) {
 				// Given: a common username likely to be a spammer, and the stopforumspam config set to use username only
 				var username = 'Adumn';
 				var ip = '185.153.198.245'; // Reported Aug 27 2019
 				var email = 'kamfertina14382@mail.ru';	// second top spammer on 6/15/2015
-				
+
 				// When: we call submit
 				stopforumspam.submit({ username: username, ip: ip, email: email })
 

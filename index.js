@@ -1,6 +1,6 @@
 'use strict';
 
-var request = require('request'),
+var fetch = require('node-fetch'),
 		_ = require('lodash'),
 		Q = require('q'),
 		utf8 = require('utf8'),
@@ -88,19 +88,24 @@ sfs.isSpammer = function (userObject) {
 		}
 	}
 	else {
-		request(url, function (error, response, body) {
-			if (error) { return deferred.reject(error); }
-			if (response.statusCode !== 200) { return deferred.reject(new Error('Response Status: ' + response.statusCode + ', ' + body)); }
-			var result = false;
-			var jsBody = JSON.parse(body);
-
-			_.each(sfs.config.searchParameters, function (parameter) {
-				if (userObject[parameter.name] && jsBody[parameter.name].appears > 0) {
-					result = JSON.parse(body);
-				}
-			});
-			deferred.resolve(result);
-		});
+		fetch(url)
+      .then((response) => {
+        if (response.status !== 200) {
+          return deferred.reject(new Error('Response Status: ' + response.statusCode));
+        }
+        return response.json();
+      })
+      .then((jsBody) => {
+        var result = false;
+        _.each(sfs.config.searchParameters, function (parameter) {
+          if (userObject[parameter.name] && jsBody[parameter.name].appears > 0) {
+            result = jsBody;
+          }
+        });
+        deferred.resolve(result);
+      }).catch((error) => {
+        return deferred.reject(error);
+    });
 	}
 
 	return deferred.promise;
@@ -155,12 +160,14 @@ sfs.submit = function (userObject, evidence) {
 				url += `&evidence=${encodeURIComponent(utf8.encode(evidence))}`;
 			}
 
-			request(url, function (error, response, body) {
-				if (error) { return deferred.reject(error); }
-				if (response.statusCode !== 200) { return deferred.reject(new Error('Response Status: ' + response.statusCode + ', ' + body)); }
-				
-				deferred.resolve();
-			});
+			fetch(url)
+        .then((response) => {
+          if (response.status !== 200) { return deferred.reject(new Error('Response Status: ' + response.statusCode)); }
+
+          deferred.resolve();
+        }).catch((error) => {
+          return deferred.reject(error);
+      });
 		}
 	}
 
@@ -239,7 +246,7 @@ sfs.User.prototype.submitSync = function* (evidence) {
 	* Getter & Setter for the API Key
 	* @param key {string} The API Key for StopForumSpam.com  Necessary for
 	* 	submitting users to the database.  Unset it with an empty string or false.
-	* @returns {string} The current API Key as it is set 
+	* @returns {string} The current API Key as it is set
 */
 sfs.Key = function(key) {
 	if (key !== undefined) {
