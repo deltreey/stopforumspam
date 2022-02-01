@@ -1,7 +1,8 @@
 'use strict';
 
-var fetch = require('node-fetch'),
-		_ = require('lodash'),
+// this is necessary due to a change in node-fetch that no longer supports require
+const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
+var _ = require('lodash'),
 		Q = require('q'),
 		utf8 = require('utf8'),
 		validator = require('validator');
