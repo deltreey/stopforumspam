@@ -89,9 +89,9 @@ describe('stopforumspam node module', function () {
 					});
 			});
 
-			it('returns false when only ip is provided and ip is not fonud', function (done) {
+			it('returns false when only ipv4 is provided and ip is not fonud', function (done) {
 				// Given: a very safe ip unlikely to be considered spam
-				var ip = '127.0.0.1';	// localhost
+				var ip = '127.0.0.1';	// localhost IPv4
 
 				// When: we call isSpammer
 				stopforumspam.isSpammer({ ip: ip })
@@ -106,9 +106,27 @@ describe('stopforumspam node module', function () {
 					});
 			});
 
+			it('returns false when only ipv6 is provided and ip is not fonud', function (done) {
+				// Given: a very safe ip unlikely to be considered spam
+				var ip = '0:0:0:0:0:0:0:1';	// localhost IPv6
+
+				// When: we call isSpammer
+				stopforumspam.isSpammer({ ip: ip })
+
+				// Then: we should see the result is false
+					.then(function (result) {
+						assert.equal(false, result);
+						done();
+					})
+					.catch(function (error) {
+						done(error);
+					});
+			});
+
+
 			it('throws an error on invalid IP', function (done) {
 				// Given: an invalid IP address
-				var ip = 'FE80:0000:0000:0000:0202:B3FF:FE1E:8329';	//IPv6 is invalid
+				var ip = 'not-a-valid-address'; // fake
 
 				// When: we call isSpammer with the IP address
 				stopforumspam.isSpammer({ ip: ip })
@@ -118,7 +136,7 @@ describe('stopforumspam node module', function () {
 						done(new Error('This should throw an error.'));
 					})
 					.catch(function (error) {
-						assert.equal('Error: The searched IP is not a valid IPv4 address', error.toString());
+						assert.equal('Error: The searched IP is not a valid IP address', error.toString());
 						done();
 					});
 			});
