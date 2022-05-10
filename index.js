@@ -59,8 +59,7 @@ var sfs = {
 	*   //     confidence: 90.2 } }
 	* });
 	* @returns Promise which returns true if the user is found on StopForumSpam.com
-	* @throws throws an error if the email or IP is passed and invalid or the IP is not IPv4.
-	* 	Stopforumsspam.com does not support IPv6 addresses.
+	* @throws throws an error if the email or IP is passed and invalid.
 	* @throws throws any error it recieves from the response, including status codes that are not 200
 */
 sfs.isSpammer = function (userObject) {
@@ -73,7 +72,7 @@ sfs.isSpammer = function (userObject) {
 			if (parameter.name === 'email' && userObject[parameter.name] && !validator.isEmail(userObject[parameter.name])) {
 				fail = 'email';
 			}
-			else if (parameter.name === 'ip' && userObject[parameter.name] && !validator.isIP(userObject[parameter.name], 4)) {
+			else if (parameter.name === 'ip' && userObject[parameter.name] && !validator.isIP(userObject[parameter.name])) {
 				fail = 'ip';
 			}
 			url += parameter.searchAdd.replace('%s', encodeURIComponent(utf8.encode(userObject[parameter.name])));
@@ -85,7 +84,7 @@ sfs.isSpammer = function (userObject) {
 			deferred.reject(new Error('The searched email is not a valid email address'));
 		}
 		else if (fail === 'ip') {
-			deferred.reject(new Error('The searched IP is not a valid IPv4 address'));
+			deferred.reject(new Error('The searched IP is not a valid IP address'));
 		}
 	}
 	else {
@@ -190,15 +189,14 @@ sfs.submitSync = function* (userObject, evidence) {
 	* @param ip {string} the IP address of the user
 	* @param email {string} the email address of the user
 	* @param username {string} the username of the user
-	* @throws throws an error if the email or IP is passed and invalid or the IP is not IPv4.
-	* 	Stopforumsspam.com does not support IPv6 addresses.
+	* @throws throws an error if the email or IP is passed and invalid.
 */
 sfs.User = function (ip, email, username) {
 	if (email && !validator.isEmail(email)) {
 		throw new Error('The email address is not a valid email address');
 	}
-	if (ip && !validator.isIP(ip, 4)) {
-		throw new Error('The IP address is not a valid IPv4 address');
+	if (ip && !validator.isIP(ip)) {
+		throw new Error('The IP address is not a valid IP address');
 	}
 	return {
 		ip: ip,

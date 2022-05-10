@@ -26,7 +26,6 @@ var stopforumspam = require('stopforumspam');
 The simplest way to use this is to create a user like this
 ```js
 var sfsUser = stopforumspam.User('127.0.0.1', 'test@test.com', 'testUserName');
-// REMEMBER!  StopForumSpam.com only supports IPv4, not IPv6 addresses
 ```
 
 Then you can check the stopforumspam.com database easily.
@@ -34,7 +33,7 @@ Then you can check the stopforumspam.com database easily.
 sfsUser.isSpammer()
 	 .then(function (result) {
 			// result is false if not found
-			
+
 			// if true result looks something like this
 			// result = {
 			//   success: 1,
